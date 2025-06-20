@@ -95,27 +95,23 @@
 
   <script>
     async function generateStory() {
-      const childName = document.getElementById("childName").value;
-      const age = document.getElementById("age").value;
-      const setting = document.getElementById("setting").value;
-      const favoriteAnimal = document.getElementById("favoriteAnimal").value;
-      const magicElement = document.getElementById("magicElement").value;
-      const eventType = document.getElementById("eventType").value;
+      const childName = document.getElementById("childName").value.trim();
+      const age = document.getElementById("age").value.trim();
+      const setting = document.getElementById("setting").value.trim();
+      const favoriteAnimal = document.getElementById("favoriteAnimal").value.trim();
+      const magicElement = document.getElementById("magicElement").value.trim();
+      const eventType = document.getElementById("eventType").value.trim();
 
       document.getElementById("storyOutput").innerText = "Generating your magical story... 🧚‍♀️";
+
+      // Build a single prompt string combining all inputs:
+      const prompt = `Write a whimsical, funny, and elegant children's story up to 2000 words about a child named ${childName}, who is ${age} years old. The story is set in a ${setting}, includes a ${favoriteAnimal}, a magical element like a ${magicElement}, and revolves around the special life moment of ${eventType}. Please make it magical and heartwarming.`;
 
       try {
         const response = await fetch("/.netlify/functions/generate-story", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            childName,
-            age,
-            setting,
-            favoriteAnimal,
-            magicElement,
-            eventType
-          }),
+          body: JSON.stringify({ prompt }),
         });
 
         const data = await response.json();
@@ -123,10 +119,11 @@
         if (data.story) {
           document.getElementById("storyOutput").innerText = data.story;
         } else {
-          document.getElementById("storyOutput").innerText = "Oops! Something went wrong: " + data.error;
+          document.getElementById("storyOutput").innerText = "Oops! Something went wrong: " + (data.error || "Unknown error");
         }
       } catch (error) {
         document.getElementById("storyOutput").innerText = "Something went wrong. Please try again.";
+        console.error("Error generating story:", error);
       }
     }
   </script>

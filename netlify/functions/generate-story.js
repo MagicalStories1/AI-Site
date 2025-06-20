@@ -6,9 +6,9 @@ const openai = new OpenAI({
 
 export async function handler(event) {
   try {
-    const body = JSON.parse(event.body);
+    const body = event.body ? JSON.parse(event.body) : null;
 
-    if (!body.prompt) {
+    if (!body || !body.prompt) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: "Missing 'prompt' in request body" }),
@@ -20,8 +20,7 @@ export async function handler(event) {
       messages: [
         {
           role: "system",
-          content:
-            "You write whimsical, funny, elegant children's stories up to 2000 words.",
+          content: "You write whimsical, funny, elegant children's stories up to 2000 words.",
         },
         { role: "user", content: `Write a story about: ${body.prompt}` },
       ],
