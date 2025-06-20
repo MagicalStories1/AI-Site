@@ -1,36 +1,44 @@
-const { Configuration, OpenAIApi } = require("openai");
+import OpenAI from "openai";
 
-exports.handler = async function (event, context) {
-  const body = JSON.parse(event.body);
-  const { childName, age, setting, favoriteAnimal, magicElement, eventType } = body;
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
-  const prompt = `
-Write a whimsical, elegant, and funny story (max 2000 words) for a child named ${childName} who is ${age} years old. 
-The story takes place in ${setting} and features a magical ${magicElement} and a favorite animal: ${favoriteAnimal}. 
-The story should center around the event: "${eventType}" and be suitable for young children. 
-Include magical descriptions and end on a happy note.
-`;
-
-  const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-  const openai = new OpenAIApi(configuration);
-
+export async function handler(event) {
   try {
-    const completion = await openai.createChatCompletion({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
+    const body = JSON.parse(event.body);
+
+    if (!body.prompt) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Missing 'prompt' in request body" }),
+      };
+    }
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You write whimsical, funny, elegant children's stories up to 2000 words.",
+        },
+        { role: "user", content: `Write a story about: ${body.prompt}` },
+      ],
       max_tokens: 2000,
     });
 
+    const story = response.choices[0].message.content;
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ story: completion.data.choices[0].message.content }),
+      body: JSON.stringify({ story }),
     };
-  } catch (err) {
+  } catch (error) {
+    console.error("Error in generate-story function:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Failed to generate story", details: err.message }),
+      body: JSON.stringify({ error: error.message }),
     };
   }
-};
+}
