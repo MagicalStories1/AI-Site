@@ -3,351 +3,137 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Magical Stories - Fairy Tale Forest</title>
+  <title>Magical Stories - Input Form</title>
   <style>
-    /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body, html {
-      height: 100%;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      overflow-x: hidden;
-      background: linear-gradient(to top, #a3d9a5 0%, #72b48c 40%, #3b6b3f 100%);
-      color: #5a2971;
-      position: relative;
-    }
-
-    /* Forest background container */
-    #forest {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      overflow: hidden;
-      z-index: -1;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    /* Trees */
-    .tree {
-      position: absolute;
-      bottom: 0;
-      width: 150px;
-      height: 300px;
-      background: linear-gradient(to top, #3a5a2a, #88b04b);
-      border-radius: 60% 60% 0 0;
-      box-shadow: inset 0 -50px 40px #2e4620;
-      filter: drop-shadow(0 5px 3px rgba(0,0,0,0.3));
-    }
-    .tree::before {
-      content: "";
-      position: absolute;
-      bottom: 0; left: 45%;
-      width: 25px; height: 120px;
-      background: #6a4c2a;
-      border-radius: 12px;
-      box-shadow: inset 0 20px 5px #50381a;
-    }
-
-    .tree1 { left: 5%; height: 320px; }
-    .tree2 { left: 25%; height: 300px; }
-    .tree3 { left: 45%; height: 310px; }
-    .tree4 { left: 65%; height: 280px; }
-    .tree5 { left: 85%; height: 300px; }
-
-    /* Toadstools */
-    .toadstool {
-      position: absolute;
-      bottom: 20px;
-      width: 70px;
-      height: 90px;
-    }
-    .toadstool .cap {
-      width: 70px;
-      height: 50px;
-      background: #ff3b5c;
-      border-radius: 50% 50% 40% 40%;
-      box-shadow: 0 4px 6px #b22a43 inset;
-      position: relative;
-      animation: pulseGlow 3s ease-in-out infinite;
-    }
-    .toadstool .cap::before {
-      content: "";
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      width: 12px; height: 12px;
-      background: white;
-      border-radius: 50%;
-      box-shadow:
-        25px 8px white,
-        45px 20px white,
-        15px 30px white;
-    }
-    .toadstool .stem {
-      position: absolute;
-      bottom: 0;
-      left: 35%;
-      width: 15px;
-      height: 60px;
-      background: #f5e1c0;
-      border-radius: 10px;
-      box-shadow: inset 0 5px 10px #c8b181;
-    }
-
-    /* Mythical creature (simple cartoon dragon) */
-    .dragon {
-      position: absolute;
-      bottom: 60px;
-      right: 10%;
-      width: 140px;
-      height: 90px;
-      background: linear-gradient(90deg, #7fdbca, #2f9e9e);
-      border-radius: 60% 40% 40% 60% / 60% 80% 20% 40%;
-      box-shadow: inset 0 0 20px #43b3ac;
-      animation: dragonFloat 5s ease-in-out infinite;
-    }
-    .dragon::before {
-      content: "";
-      position: absolute;
-      top: 20px;
-      left: -20px;
-      width: 50px;
-      height: 50px;
-      background: #2f9e9e;
-      border-radius: 50%;
-      box-shadow: 0 5px 0 #1e6b6a;
-    }
-
-    /* Fairy */
-    .fairy {
-      position: absolute;
-      width: 50px;
-      height: 80px;
-      background: linear-gradient(to bottom, #f9c1f9 0%, #c57de5 100%);
-      border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
-      box-shadow: 0 0 20px #d27ee7;
-      animation: fairyFly 4s ease-in-out infinite;
-    }
-    .fairy.wing-left, .fairy.wing-right {
-      position: absolute;
-      top: 10px;
-      width: 30px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 50%;
-      filter: drop-shadow(0 0 4px #c785d4);
-      animation: wingFlap 1.2s ease-in-out infinite;
-    }
-    .fairy.wing-left {
-      left: -20px;
-      transform-origin: right center;
-      animation-delay: 0s;
-    }
-    .fairy.wing-right {
-      right: -20px;
-      transform-origin: left center;
-      animation-delay: 0.6s;
-    }
-
-    .fairy1 { left: 40%; bottom: 180px; animation-delay: 0s; }
-    .fairy2 { left: 55%; bottom: 150px; animation-delay: 2s; }
-    .fairy3 { left: 70%; bottom: 210px; animation-delay: 1s; }
-
-    /* Animations */
-    @keyframes wingFlap {
-      0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(20deg); }
-    }
-
-    @keyframes fairyFly {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 4px 6px #b22a43 inset; }
-      50% { box-shadow: 0 4px 14px #ff627e inset; }
-    }
-
-    @keyframes dragonFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-
-    /* Main container for form */
-    main {
-      max-width: 650px;
-      margin: 3rem auto 5rem;
-      background: rgba(255 255 255 / 0.9);
-      padding: 2.5rem 3rem;
-      border-radius: 25px;
-      box-shadow: 0 0 30px 8px #c27ffab5;
-      color: #5a2971;
+    body {
+      background: linear-gradient(#fef6ff, #f0e6ff);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      padding: 2rem;
       text-align: center;
-      position: relative;
-      z-index: 10;
+      color: #5a2971;
     }
-
     h1 {
-      font-size: 2.8rem;
-      margin-bottom: 0.25rem;
-      color: #7a268e;
-      text-shadow: 0 0 6px #bb5ce2;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
     }
-    p.subtitle {
-      font-size: 1.25rem;
-      margin-bottom: 1.8rem;
-      font-style: italic;
-      color: #68256b;
-    }
-
     form {
       background: #fff0fb;
       padding: 2rem;
       border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(90, 41, 113, 0.3);
-      max-width: 100%;
+      box-shadow: 0 4px 8px rgba(90, 41, 113, 0.2);
+      max-width: 600px;
       margin: 0 auto;
       text-align: left;
-      color: #5a2971;
     }
-
     label {
       display: block;
-      margin: 1rem 0 0.3rem;
-      font-weight: 700;
-      font-size: 1.1rem;
+      margin: 1rem 0 0.2rem;
+      font-weight: bold;
     }
     input {
       width: 100%;
-      padding: 0.6rem;
+      padding: 0.5rem;
       font-size: 1rem;
       border-radius: 8px;
-      border: 1.8px solid #a15bbf;
-      transition: border-color 0.3s ease;
+      border: 1px solid #ccc;
     }
-    input:focus {
-      outline: none;
-      border-color: #7a268e;
-      box-shadow: 0 0 6px #a75bd7aa;
-    }
-
     button {
       margin-top: 2rem;
-      padding: 0.9rem 2.5rem;
-      background: #a75bd7;
+      padding: 0.8rem 2rem;
+      background: #c06fff;
       color: white;
-      font-size: 1.2rem;
-      font-weight: 700;
+      font-size: 1.1rem;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: 0.3s;
       display: block;
       width: 100%;
-      max-width: 320px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 4px 10px #b77deeaa;
     }
     button:hover {
-      background: #7a268e;
-      box-shadow: 0 6px 14px #9247cecc;
+      background: #a44de6;
     }
-
     #storyOutput {
       margin-top: 3rem;
       background: #f9f2ff;
-      padding: 1.8rem 2rem;
+      padding: 2rem;
       border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(90, 41, 113, 0.2);
+      box-shadow: 0 4px 6px rgba(90, 41, 113, 0.2);
       white-space: pre-wrap;
-      max-height: 300px;
-      overflow-y: auto;
-      font-size: 1rem;
-      color: #4b2f77;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      min-height: 150px;
     }
-
   </style>
 </head>
 <body>
 
-  <div id="forest">
-    <!-- Trees -->
-    <div class="tree tree1"></div>
-    <div class="tree tree2"></div>
-    <div class="tree tree3"></div>
-    <div class="tree tree4"></div>
-    <div class="tree tree5"></div>
+  <h1>📚 Magical Story Generator</h1>
+  <p>Create a whimsical story for your child, filled with wonder and magic!</p>
 
-    <!-- Toadstools -->
-    <div class="toadstool" style="left: 10%; bottom: 20px;">
-      <div class="cap"></div>
-      <div class="stem"></div>
-    </div>
-    <div class="toadstool" style="left: 30%; bottom: 25px; transform: scale(0.9);">
-      <div class="cap"></div>
-      <div class="stem"></div>
-    </div>
-    <div class="toadstool" style="left: 50%; bottom: 18px; transform: scale(1.1);">
-      <div class="cap"></div>
-      <div class="stem"></div>
-    </div>
+  <form id="storyForm" onsubmit="event.preventDefault(); generateStory();">
+    <label for="childName">Child's Name:</label>
+    <input id="childName" required />
 
-    <!-- Dragon -->
-    <div class="dragon"></div>
+    <label for="age">Age:</label>
+    <input id="age" type="number" required />
 
-    <!-- Fairies -->
-    <div class="fairy fairy1">
-      <div class="wing-left fairy-wing"></div>
-      <div class="wing-right fairy-wing"></div>
-    </div>
-    <div class="fairy fairy2">
-      <div class="wing-left fairy-wing"></div>
-      <div class="wing-right fairy-wing"></div>
-    </div>
-    <div class="fairy fairy3">
-      <div class="wing-left fairy-wing"></div>
-      <div class="wing-right fairy-wing"></div>
-    </div>
-  </div>
+    <label for="setting">Magical Setting (e.g. fairy forest, candy cloud kingdom):</label>
+    <input id="setting" required />
 
-  <main>
-    <h1>Magical Stories</h1>
-    <p class="subtitle">Enter a story prompt and get a whimsical tale!</p>
+    <label for="favoriteAnimal">Favorite Animal:</label>
+    <input id="favoriteAnimal" required />
 
-    <form id="storyForm">
-      <label for="storyInput">Your story idea:</label>
-      <input type="text" id="storyInput" name="storyInput" placeholder="e.g. First day at nursery" required />
-      <button type="submit">Generate Story</button>
-    </form>
+    <label for="magicElement">Magical Creature or Element (e.g. dragon, sparkle wand):</label>
+    <input id="magicElement" required />
 
-    <pre id="storyOutput" aria-live="polite" role="region"></pre>
-  </main>
+    <label for="eventType">Special Life Moment (e.g. learning to swim):</label>
+    <input id="eventType" required />
+
+    <button type="submit">Generate Story ✨</button>
+  </form>
+
+  <div id="storyOutput">Your magical story will appear here...</div>
 
   <script>
-    const form = document.getElementById('storyForm');
-    const output = document.getElementById('storyOutput');
+    async function generateStory() {
+      const childName = document.getElementById("childName").value;
+      const age = document.getElementById("age").value;
+      const setting = document.getElementById("setting").value;
+      const favoriteAnimal = document.getElementById("favoriteAnimal").value;
+      const magicElement = document.getElementById("magicElement").value;
+      const eventType = document.getElementById("eventType").value;
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const prompt = document.getElementById('storyInput').value.trim();
-      if (!prompt) return;
-      output.textContent = "✨ Generating your magical story about '" + prompt + "' ... ✨";
+      document.getElementById("storyOutput").innerText = "Generating your magical story... 🧚‍♀️";
 
-      // Fake AI story generation for demo:
-      setTimeout(() => {
-        output.textContent = `Once upon a time, in a magical land, there was a story about "${prompt}".\n\n` +
-          "The sun shone through the leaves as little fairies danced among the flowers.\n" +
-          "Our hero learned something wonderful and made a new friend.\n\n" +
-          "And they all lived happily ever after in the enchanted forest.";
-      }, 1800);
-    });
-  </script>
+      try {
+        const response = await fetch("/.netlify/functions/generate-story", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            childName,
+            age,
+            setting,
+            favoriteAnimal,
+            magicElement,
+            eventType
+          }),
+        });
 
-</body>
-</html>
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          document.getElementById("storyOutput").innerText = "Oops! Something went wrong: " + (errorData.error || response.statusText);
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.story) {
+          document.getElementById("storyOutput").innerText = data.story;
+        } else {
+          document.getElementById("storyOutput").innerText = "Oops! Something went wrong: " + (data.error || "Unknown error");
+        }
+      } catch (error) {
+        document.ge
