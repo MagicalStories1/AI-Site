@@ -1,0 +1,12 @@
+{
+  "name": "magicalstories",
+  "version": "1.0.0",
+  "description": "Magical Stories AI site",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo 'No start script needed'"
+  },
+  "dependencies": {
+    "openai": "^4.25.0"
+  }
+}
