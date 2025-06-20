@@ -1,131 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Magical Stories</title>
-  <style>
-    body {
-      background: linear-gradient(#fef6ff, #f0e6ff);
-      font-family: "Comic Sans MS", cursive, sans-serif;
-      padding: 2rem;
-      text-align: center;
-      color: #5a2971;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-    form {
-      background: #fff0fb;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(90, 41, 113, 0.2);
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    label {
-      display: block;
-      margin: 1rem 0 0.2rem;
-      font-weight: bold;
-    }
-    input {
-      width: 100%;
-      padding: 0.5rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Magical Stories ✨</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC&family=Pacifico&display=swap" rel="stylesheet" />
+
+<style>
+  /* Base Reset */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #f9f2ff, #e1d4f7);
+    font-family: 'Amatic SC', cursive;
+    color: #5a2971;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* Sparkle background animation */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 20% 30%, #fff9, transparent 40%),
+                radial-gradient(circle at 80% 70%, #fff9, transparent 40%);
+    pointer-events: none;
+    animation: twinkle 8s linear infinite;
+    z-index: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.3; }
+  }
+
+  header {
+    text-align: center;
+    padding: 3rem 1rem 1rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  header h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 3.5rem;
+    margin: 0;
+    text-shadow: 0 0 8px #b58fff, 0 0 15px #c59fff;
+  }
+  header p {
+    font-size: 1.3rem;
+    margin-top: 0.3rem;
+    font-style: italic;
+    color: #7a4ec7dd;
+  }
+
+  main {
+    max-width: 700px;
+    background: #fdf4ffcc;
+    margin: 2rem auto 4rem;
+    padding: 2rem 2.5rem;
+    border-radius: 25px;
+    box-shadow:
+      0 0 25px #c59fff88,
+      inset 0 0 40px #b58fffaa;
+    position: relative;
+    z-index: 2;
+  }
+
+  form label {
+    display: block;
+    margin: 1rem 0 0.3rem;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #6d3084;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"] {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    font-family: 'Amatic SC', cursive;
+    font-size: 1.6rem;
+    border-radius: 12px;
+    border: 2px solid #9c6ad4;
+    background: #f6eaff;
+    color: #5a2971;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="email"]:focus {
+    outline: none;
+    border-color: #c59fff;
+    box-shadow: 0 0 10px #c59fff88;
+  }
+
+  button {
+    margin-top: 2.5rem;
+    padding: 0.8rem 3rem;
+    background: linear-gradient(135deg, #b473ff, #8c3fff);
+    border: none;
+    border-radius: 20px;
+    font-family: 'Pacifico', cursive;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 20px #b473ffaa;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  button:hover {
+    background: linear-gradient(135deg, #d49eff, #a044ff);
+    box-shadow: 0 0 30px #d49effcc;
+  }
+  button::after {
+    content: "✨";
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.8rem;
+    opacity: 0;
+    transition: left 0.4s ease, opacity 0.4s ease;
+  }
+  button:hover::after {
+    left: 10px;
+    opacity: 1;
+  }
+
+  #storyOutput {
+    margin-top: 3rem;
+    background: #fff9f5;
+    padding: 2rem 2.5rem;
+    border-radius: 25px;
+    box-shadow:
+      0 0 25px #d6c1f7cc,
+      inset 0 0 30px #c59fffbb;
+    white-space: pre-wrap;
+    font-size: 1.5rem;
+    font-family: 'Amatic SC', cursive;
+    color: #5a2971;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  /* Floating fairies and magical elements */
+  .fairy, .leaf, .star {
+    position: fixed;
+    pointer-events: none;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  .fairy {
+    width: 60px;
+    animation-name: fairy-float;
+    animation-duration: 6s;
+  }
+  .leaf {
+    width: 40px;
+    animation-name: leaf-sway;
+    animation-duration: 8s;
+  }
+  .star {
+    width: 20px;
+    animation-name: star-twinkle;
+    animation-duration: 3s;
+  }
+
+  @keyframes fairy-float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-15px) translateX(10px); }
+  }
+  @keyframes leaf-sway {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    50% { transform: rotate(10deg) translateY(5px); }
+  }
+  @keyframes star-twinkle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    main {
+      padding: 1.5rem 1.8rem;
     }
     button {
-      margin-top: 2rem;
-      padding: 0.8rem 2rem;
-      background: #c06fff;
-      color: white;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #a44de6;
+      font-size: 1.5rem;
+      padding: 0.6rem 2rem;
     }
     #storyOutput {
-      margin-top: 3rem;
-      background: #f9f2ff;
-      padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(90, 41, 113, 0.2);
-      white-space: pre-wrap;
-      text-align: left;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      font-size: 1.3rem;
+      max-height: 300px;
     }
-  </style>
+  }
+</style>
+
 </head>
 <body>
 
-  <h1>📚 Magical Story Generator</h1>
-  <p>Create a whimsical story for your child, filled with wonder and magic!</p>
+<header>
+  <h1>🧚 Magical Story Generator 🧙‍♂️</h1>
+  <p>A whimsical fairy-tale adventure just for your child</p>
+</header>
 
+<main>
   <form id="storyForm" onsubmit="event.preventDefault(); generateStory();">
-    <label>Child's Name:</label>
-    <input id="childName" required />
+    <label for="childName">Child's Name:</label>
+    <input type="text" id="childName" required />
 
-    <label>Age:</label>
-    <input id="age" type="number" required />
+    <label for="age">Age:</label>
+    <input type="number" id="age" min="1" max="18" required />
 
-    <label>Magical Setting (e.g. fairy forest, candy cloud kingdom):</label>
-    <input id="setting" required />
+    <label for="setting">Magical Setting (e.g. fairy forest, candy cloud kingdom):</label>
+    <input type="text" id="setting" required />
 
-    <label>Favorite Animal:</label>
-    <input id="favoriteAnimal" required />
+    <label for="favoriteAnimal">Favorite Animal:</label>
+    <input type="text" id="favoriteAnimal" required />
 
-    <label>Magical Creature or Element (e.g. dragon, sparkle wand):</label>
-    <input id="magicElement" required />
+    <label for="magicElement">Magical Creature or Element (e.g. dragon, sparkle wand):</label>
+    <input type="text" id="magicElement" required />
 
-    <label>Special Life Moment (e.g. learning to swim):</label>
-    <input id="eventType" required />
+    <label for="eventType">Special Life Moment (e.g. learning to swim):</label>
+    <input type="text" id="eventType" required />
+
+    <label for="email">Your Email (to receive the full story PDF):</label>
+    <input type="email" id="email" required />
 
     <button type="submit">Generate Story ✨</button>
   </form>
 
   <div id="storyOutput">Your magical story will appear here...</div>
+</main>
 
-  <script>
-    async function generateStory() {
-      const childName = document.getElementById("childName").value.trim();
-      const age = document.getElementById("age").value.trim();
-      const setting = document.getElementById("setting").value.trim();
-      const favoriteAnimal = document.getElementById("favoriteAnimal").value.trim();
-      const magicElement = document.getElementById("magicElement").value.trim();
-      const eventType = document.getElementById("eventType").value.trim();
+<!-- Floating magical elements -->
+<img src="https://i.imgur.com/GfDxnwq.png" alt="Fairy" class="fairy" style="top:10%; left:5%;" />
+<img src="https://i.imgur.com/oIjd9xB.png" alt="Leaf" class="leaf" style="top:70%; right:15%;" />
+<img src="https://i.imgur.com/On4nXPN.png" alt="Star" class="star" style="top:50%; left:90%;" />
 
-      document.getElementById("storyOutput").innerText = "Generating your magical story... 🧚‍♀️";
+<script>
+  async function generateStory() {
+    const childName = document.getElementById("childName").value;
+    const age = document.getElementById("age").value;
+    const setting = document.getElementById("setting").value;
+    const favoriteAnimal = document.getElementById("favoriteAnimal").value;
+    const magicElement = document.getElementById("magicElement").value;
+    const eventType = document.getElementById("eventType").value;
+    const email = document.getElementById("email").value;
 
-      // Build a single prompt string combining all inputs:
-      const prompt = `Write a whimsical, funny, and elegant children's story up to 2000 words about a child named ${childName}, who is ${age} years old. The story is set in a ${setting}, includes a ${favoriteAnimal}, a magical element like a ${magicElement}, and revolves around the special life moment of ${eventType}. Please make it magical and heartwarming.`;
+    const storyOutput = document.getElementById("storyOutput");
+    storyOutput.innerText = "✨ Generating your magical story... please wait... 🧚‍♀️";
 
-      try {
-        const response = await fetch("/.netlify/functions/generate-story", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt }),
-        });
+    try {
+      const response = await fetch("/.netlify/functions/generate-story", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          childName,
+          age,
+          setting,
+          favoriteAnimal,
+          magicElement,
+          eventType,
+          email
+        }),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (data.story) {
-          document.getElementById("storyOutput").innerText = data.story;
-        } else {
-          document.getElementById("storyOutput").innerText = "Oops! Something went wrong: " + (data.error || "Unknown error");
-        }
-      } catch (error) {
-        document.getElementById("storyOutput").innerText = "Something went wrong. Please try again.";
-        console.error("Error generating story:", error);
+      if (data.story) {
+        storyOutput.innerText = data.story;
+      } else {
+        storyOutput.innerText = "Oops! Something went wrong: " + (data.error || "Unknown error");
       }
+    } catch (error) {
+      storyOutput.innerText = "Something went wrong. Please try again.";
+      console.error(error);
     }
-  </script>
+  }
+</script>
+
 </body>
 </html>
