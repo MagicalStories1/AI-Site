@@ -23,6 +23,7 @@
       box-shadow: 0 4px 8px rgba(90, 41, 113, 0.2);
       max-width: 600px;
       margin: 0 auto;
+      text-align: left;
     }
     label {
       display: block;
@@ -54,74 +55,4 @@
       margin-top: 3rem;
       background: #f9f2ff;
       padding: 2rem;
-      border-radius: 15px;
-      box-shadow: 0 4px 6px rgba(90, 41, 113, 0.2);
-      white-space: pre-wrap;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: left;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>📚 Magical Story Generator</h1>
-  <p>Create a whimsical story for your child, filled with wonder and magic!</p>
-
-  <form id="storyForm" onsubmit="event.preventDefault(); generateStory();">
-    <label>Child's Name:</label>
-    <input id="childName" required />
-
-    <label>Age:</label>
-    <input id="age" type="number" required />
-
-    <label>Magical Setting (e.g. fairy forest, candy cloud kingdom):</label>
-    <input id="setting" required />
-
-    <label>Favorite Animal:</label>
-    <input id="favoriteAnimal" required />
-
-    <label>Magical Creature or Element (e.g. dragon, sparkle wand):</label>
-    <input id="magicElement" required />
-
-    <label>Special Life Moment (e.g. learning to swim):</label>
-    <input id="eventType" required />
-
-    <button type="submit">Generate Story ✨</button>
-  </form>
-
-  <div id="storyOutput">Your magical story will appear here...</div>
-
-  <script>
-    async function generateStory() {
-      const childName = document.getElementById("childName").value.trim();
-      const age = document.getElementById("age").value.trim();
-      const setting = document.getElementById("setting").value.trim();
-      const favoriteAnimal = document.getElementById("favoriteAnimal").value.trim();
-      const magicElement = document.getElementById("magicElement").value.trim();
-      const eventType = document.getElementById("eventType").value.trim();
-
-      // Show loading
-      document.getElementById("storyOutput").innerText = "Generating your magical story... 🧚‍♀️";
-
-      try {
-        const response = await fetch("/.netlify/functions/generate-story", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            childName,
-            age,
-            setting,
-            favoriteAnimal,
-            magicElement,
-            eventType
-          }),
-        });
-
-        const data = await response.json();
-
-        if (response.status === 200 && data.story) {
-          document.getElementById("storyOutput").innerText = data.story;
-        } else {
-          document.getElem
+      border
