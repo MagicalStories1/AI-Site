@@ -1,4 +1,6 @@
-import OpenAI from "openai";
+// netlify/functions/generate-story.js
+
+import { OpenAI } from "openai";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -6,38 +8,36 @@ const openai = new OpenAI({
 
 export async function handler(event) {
   try {
-    const body = event.body ? JSON.parse(event.body) : null;
+    const body = JSON.parse(event.body);
 
-    if (!body || !body.prompt) {
+    const { childName, age, setting, favoriteAnimal, magicElement, eventType } = body;
+
+    if (!childName || !age || !setting || !favoriteAnimal || !magicElement || !eventType) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Missing 'prompt' in request body" }),
+        body: JSON.stringify({ error: "Missing one or more required fields." }),
       };
     }
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You write whimsical, funny, elegant children's stories up to 2000 words.",
-        },
-        { role: "user", content: `Write a story about: ${body.prompt}` },
-      ],
-      max_tokens: 2000,
+    const prompt = `Create a whimsical, 2000-word children's story for a ${age}-year-old named ${childName} set in a magical place called ${setting}. Include a favorite animal (${favoriteAnimal}), a magical element (${magicElement}), and make it revolve around the life moment: ${eventType}. The tone should be elegant, magical, funny, and age-appropriate.`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.8,
     });
 
-    const story = response.choices[0].message.content;
+    const story = completion.choices[0]?.message?.content || "No story was generated.";
 
     return {
       statusCode: 200,
       body: JSON.stringify({ story }),
     };
-  } catch (error) {
-    console.error("Error in generate-story function:", error);
+  } catch (err) {
+    console.error("Function error:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message }),
+      body: JSON.stringify({ error: "Failed to generate story." }),
     };
   }
 }
