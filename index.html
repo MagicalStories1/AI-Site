@@ -1,54 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>MagicalStories</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Magical Stories - Input Form</title>
   <style>
     body {
-      font-family: 'Comic Sans MS', cursive;
-      background: linear-gradient(to bottom, #fceabb, #f8b500);
-      color: #333;
-      padding: 20px;
+      background: linear-gradient(#fef6ff, #f0e6ff);
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      padding: 2rem;
+      text-align: center;
+      color: #5a2971;
     }
     h1 {
-      color: #6a0dad;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
     }
-    .storybook {
-      background: white;
-      border: 2px dashed #ccc;
-      padding: 20px;
-      margin-top: 20px;
+    form {
+      background: #fff0fb;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(90, 41, 113, 0.2);
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.2rem;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 2rem;
+      padding: 0.8rem 2rem;
+      background: #c06fff;
+      color: white;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      display: block;
+      width: 100%;
+    }
+    button:hover {
+      background: #a44de6;
+    }
+    #storyOutput {
+      margin-top: 3rem;
+      background: #f9f2ff;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 6px rgba(90, 41, 113, 0.2);
       white-space: pre-wrap;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      min-height: 150px;
     }
   </style>
 </head>
 <body>
-  <h1>🌟 Magical Story Generator 🌙</h1>
-  <form id="storyForm">
-    <label>Child's Name:</label><br>
-    <input type="text" id="name"><br>
-    <label>Age:</label><br>
-    <input type="number" id="age"><br>
-    <label>Experience:</label><br>
-    <input type="text" id="experience"><br><br>
-    <button type="submit">Generate Story</button>
+
+  <h1>📚 Magical Story Generator</h1>
+  <p>Create a whimsical story for your child, filled with wonder and magic!</p>
+
+  <form id="storyForm" onsubmit="event.preventDefault(); generateStory();">
+    <label for="childName">Child's Name:</label>
+    <input id="childName" required />
+
+    <label for="age">Age:</label>
+    <input id="age" type="number" required />
+
+    <label for="setting">Magical Setting (e.g. fairy forest, candy cloud kingdom):</label>
+    <input id="setting" required />
+
+    <label for="favoriteAnimal">Favorite Animal:</label>
+    <input id="favoriteAnimal" required />
+
+    <label for="magicElement">Magical Creature or Element (e.g. dragon, sparkle wand):</label>
+    <input id="magicElement" required />
+
+    <label for="eventType">Special Life Moment (e.g. learning to swim):</label>
+    <input id="eventType" required />
+
+    <button type="submit">Generate Story ✨</button>
   </form>
-  <div id="result" class="storybook"></div>
+
+  <div id="storyOutput">Your magical story will appear here...</div>
 
   <script>
-    document.getElementById('storyForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const name = document.getElementById('name').value;
-      const age = document.getElementById('age').value;
-      const experience = document.getElementById('experience').value;
-      const response = await fetch('/.netlify/functions/story', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, age, experience })
-      });
-      const data = await response.json();
-      document.getElementById('result').textContent = data.story || "Sorry, couldn't generate story.";
-    });
+    async function generateStory() {
+      const childName = document.getElementById("childName").value;
+      const age = document.getElementById("age").value;
+      const setting = document.getElementById("setting").value;
+      const favoriteAnimal = document.getElementById("favoriteAnimal").value;
+      const magicElement = document.getElementById("magicElement").value;
+      const eventType = document.getElementById("eventType").value;
+
+      document.getElementById("storyOutput").innerText = "Generating your magical story... 🧚‍♀️";
+
+      try {
+        const response = await fetch("/.netlify/functions/generate-story", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            childName,
+            age,
+            setting,
+            favoriteAnimal,
+            magicElement,
+            eventType
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          document.getElementById("storyOutput").innerText = "Oops! Something went wrong: " + (errorData.error || response.statusText);
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.story) {
+          document.getElementById("storyOutput").innerText = data.story;
+        } else {
+          document.getElementById("storyOutput").innerText = "Oops! Something went wrong: " + (data.error || "Unknown error");
+        }
+      } catch (error) {
+        document.getElementById("storyOutput").innerText = "Something went wrong. Please try again.";
+      }
+    }
   </script>
+
 </body>
 </html>
