@@ -1,0 +1,30 @@
+/* style.css */
+body {
+  background-color: #fdf6ff;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  color: #333;
+  padding: 20px;
+  background-image: url('stars-bg.png'); /* Optional background image */
+  background-size: cover;
+}
+
+h1 {
+  color: #8e44ad;
+  text-shadow: 1px 1px 3px #fff;
+}
+
+input, select, textarea {
+  border: 2px solid #dcd0ff;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #9b59b6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+}
