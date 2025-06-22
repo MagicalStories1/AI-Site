@@ -1,43 +1,40 @@
-const { Configuration, OpenAIApi } = require("openai");
+// netlify/functions/story.js
+import OpenAI from 'openai';
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
 
-const openai = new OpenAIApi(configuration);
-
-exports.handler = async function (event, context) {
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: "Method Not Allowed",
-    };
-  }
-
+export async function handler(event) {
   try {
-    const { childName, favouriteAnimal, favouriteColour, magicalObject, firstExperience } = JSON.parse(event.body);
+    const data = JSON.parse(event.body);
+    const { childName, favoriteAnimal, favoriteColor, experienceType, location } = data;
 
-    const prompt = `Create a whimsical, magical story for a child named ${childName}. Include their favourite animal, which is a ${favouriteAnimal}, their favourite colour ${favouriteColour}, and a magical object: ${magicalObject}. The story should revolve around their first experience of ${firstExperience}. The story should be rich in detail, imaginative, and around 2000 words. Use a fun, enchanting tone suitable for young children. Include elements like fairies, wizards, castles, toadstools, sparkling rivers, and magical forests.`;
+    const prompt = `Write a magical 3000-word whimsical story for a child named ${childName} 
+who loves ${favoriteAnimal}s and the color ${favoriteColor}. The story should be about their first 
+${experienceType} in ${location}. Include magical elements, a helpful wizard, and a friendly fairy.`;
 
-    const completion = await openai.createChatCompletion({
+    const response = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
-        { role: "system", content: "You are a children's storybook author." },
+        { role: "system", content: "You are a magical story-teller for children." },
         { role: "user", content: prompt }
       ],
       temperature: 0.8,
       max_tokens: 3000
     });
 
+    const story = response.choices[0]?.message?.content || "Oops! No story was generated.";
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ story: completion.data.choices[0].message.content }),
+      body: JSON.stringify({ story })
     };
-  } catch (error) {
-    console.error("Story generation failed:", error);
+
+  } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Failed to generate story." }),
+      body: JSON.stringify({ error: err.message })
     };
   }
-};
+}
