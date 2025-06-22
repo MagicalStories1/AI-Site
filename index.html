@@ -90,4 +90,92 @@
 
     form { text-align:left; }
     label { display:block; margin:1rem 0 0.3rem; font-weight:bold; }
-    input { width:100%; padding:0.6rem; border-radius:8px; border:1.5px solid #a15bbf;
+    input { width:100%; padding:0.6rem; border-radius:8px; border:1.5px solid #a15bbf; transition:0.3s; }
+    input:focus { border-color:#7a268e; outline:none; }
+    button {
+      margin-top:1.5rem;
+      width:100%; max-width:300px;
+      padding:0.9rem 2rem;background:#a75bd7;
+      color:white; border:none; border-radius:12px;
+      font-size:1.2rem; cursor:pointer;
+      box-shadow:0 4px 10px #b77deeaa;
+      transition:0.3s;
+    }
+    button:hover { background:#7a268e; box-shadow:0 6px 14px #9247cecc; }
+
+    /* Story output */
+    #storyOutput {
+      margin-top:2rem;
+      background:#f9f2ff;
+      padding:1.8rem;
+      border-radius:15px;
+      box-shadow:0 4px 10px rgba(90,41,113,0.2);
+      white-space:pre-wrap; max-height:300px;
+      overflow-y:auto; font-size:1rem; color:#4b2f77;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="forest">
+    <div class="tree tree1"></div><div class="tree tree2"></div>
+    <div class="tree tree3"></div><div class="tree tree4"></div>
+    <div class="tree tree5"></div>
+
+    <div class="toadstool" style="left:12%;"><div class="cap"></div><div class="stem"></div></div>
+    <div class="toadstool" style="left:38%;"><div class="cap"></div><div class="stem"></div></div>
+    <div class="toadstool" style="left:64%;"><div class="cap"></div><div class="stem"></div></div>
+
+    <div class="fairy fairy1"><div class="wing left wing"></div><div class="wing right wing"></div></div>
+    <div class="fairy fairy2"><div class="wing left wing"></div><div class="wing right wing"></div></div>
+    <div class="fairy fairy3"><div class="wing left wing"></div><div class="wing right wing"></div></div>
+
+    <div class="dragon"></div>
+  </div>
+
+  <main>
+    <h1>📚 Magical Story Generator</h1>
+    <p class="subtitle">Fill the fields below to create a special story</p>
+    <form id="storyForm">
+      <label>Child's Name:</label><input id="childName" required />
+      <label>Age:</label><input id="age" type="number" required />
+      <label>Magical Setting:</label><input id="setting" required />
+      <label>Favorite Animal:</label><input id="favoriteAnimal" required />
+      <label>Magical Creature/Element:</label><input id="magicElement" required />
+      <label>Special Life Moment:</label><input id="eventType" required />
+      <button type="submit">Generate Story ✨</button>
+    </form>
+    <div id="storyOutput">Your magical story will appear here...</div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("storyForm").addEventListener("submit", async e => {
+        e.preventDefault();
+        const get = id => document.getElementById(id).value.trim();
+        const data = {
+          childName: get("childName"),
+          age: get("age"),
+          setting: get("setting"),
+          favoriteAnimal: get("favoriteAnimal"),
+          magicElement: get("magicElement"),
+          eventType: get("eventType"),
+        };
+        document.getElementById("storyOutput").innerText = "Generating... 🧚‍♀️";
+        try {
+          const res = await fetch("/.netlify/functions/generate-story", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+          const json = await res.json();
+          document.getElementById("storyOutput").innerText = res.ok ? json.story : `Error: ${json.error||res.status}`;
+        } catch (err) {
+          console.error(err);
+          document.getElementById("storyOutput").innerText = "Oops! Something went wrong.";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
