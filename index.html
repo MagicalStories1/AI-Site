@@ -1,35 +1,106 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Magical Stories</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MagicalStories</title>
+  <link href="https://fonts.googleapis.com/css2?family=Princess+Sofia&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Princess Sofia', cursive;
+      background: linear-gradient(to bottom, #e0d8f6, #fef8ff);
+      color: #4b0082;
+      text-align: center;
+      padding: 2rem;
+    }
+    header {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      background-image: url('https://i.ibb.co/2vfjWtv/magical-header.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 150px;
+    }
+    form {
+      background: #fff8fc;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      display: inline-block;
+      margin-top: 1rem;
+    }
+    input, select, button {
+      font-family: 'Princess Sofia', cursive;
+      padding: 0.5rem;
+      margin: 0.5rem;
+      font-size: 1.2rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #c79cf2;
+      color: white;
+      cursor: pointer;
+    }
+    .story {
+      background: #ffffffcc;
+      border-radius: 15px;
+      padding: 1rem;
+      margin-top: 2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
 </head>
 <body>
-  <h1>Create Your Magical Story</h1>
+  <header>
+    <h1>MagicalStories</h1>
+  </header>
   <form id="storyForm">
-    <label>Name: <input type="text" id="name" required></label><br>
-    <label>Age: <input type="number" id="age" required></label><br>
-    <label>Experience: <input type="text" id="experience" required></label><br>
-    <button type="submit">Generate Story</button>
+    <div>
+      <input type="text" name="name" placeholder="Child's Name" required />
+    </div>
+    <div>
+      <input type="text" name="favouriteAnimal" placeholder="Favourite Animal" required />
+    </div>
+    <div>
+      <input type="text" name="favouriteColor" placeholder="Favourite Colour" required />
+    </div>
+    <div>
+      <input type="text" name="magicalObject" placeholder="Magical Object (e.g., wand)" required />
+    </div>
+    <div>
+      <select name="firstExperience" required>
+        <option value="">Select First Experience</option>
+        <option value="swimming">First Time Swimming</option>
+        <option value="football">First Football Match</option>
+        <option value="school">First Day at School</option>
+        <option value="nursery">First Day at Nursery</option>
+      </select>
+    </div>
+    <button type="submit">Create My Story</button>
   </form>
-  <pre id="result"></pre>
+  <div id="storyResult" class="story"></div>
 
   <script>
-    const fnName = 'story';
-    document.getElementById('storyForm').addEventListener('submit', async (e) => {
+    document.getElementById("storyForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const res = await fetch(`/.netlify/functions/${fnName}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name: document.getElementById('name').value,
-          age: document.getElementById('age').value,
-          experience: document.getElementById('experience').value
-        })
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const data = Object.fromEntries(formData.entries());
+
+      const response = await fetch("/.netlify/functions/story", {
+        method: "POST",
+        body: JSON.stringify(data),
       });
-      const data = await res.json();
-      document.getElementById('result').textContent = data.story || data.error;
+
+      const result = await response.json();
+      document.getElementById("storyResult").innerText = result.story;
     });
   </script>
 </body>
