@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Magical Stories - Input Form</title>
+  <title>Magical Stories</title>
   <style>
     body {
       background: linear-gradient(#fef6ff, #f0e6ff);
@@ -23,7 +23,6 @@
       box-shadow: 0 4px 8px rgba(90, 41, 113, 0.2);
       max-width: 600px;
       margin: 0 auto;
-      text-align: left;
     }
     label {
       display: block;
@@ -47,8 +46,6 @@
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s;
-      display: block;
-      width: 100%;
     }
     button:hover {
       background: #a44de6;
@@ -64,7 +61,6 @@
       margin-left: auto;
       margin-right: auto;
       text-align: left;
-      min-height: 150px;
     }
   </style>
 </head>
@@ -74,22 +70,22 @@
   <p>Create a whimsical story for your child, filled with wonder and magic!</p>
 
   <form id="storyForm" onsubmit="event.preventDefault(); generateStory();">
-    <label for="childName">Child's Name:</label>
+    <label>Child's Name:</label>
     <input id="childName" required />
 
-    <label for="age">Age:</label>
+    <label>Age:</label>
     <input id="age" type="number" required />
 
-    <label for="setting">Magical Setting (e.g. fairy forest, candy cloud kingdom):</label>
+    <label>Magical Setting (e.g. fairy forest, candy cloud kingdom):</label>
     <input id="setting" required />
 
-    <label for="favoriteAnimal">Favorite Animal:</label>
+    <label>Favorite Animal:</label>
     <input id="favoriteAnimal" required />
 
-    <label for="magicElement">Magical Creature or Element (e.g. dragon, sparkle wand):</label>
+    <label>Magical Creature or Element (e.g. dragon, sparkle wand):</label>
     <input id="magicElement" required />
 
-    <label for="eventType">Special Life Moment (e.g. learning to swim):</label>
+    <label>Special Life Moment (e.g. learning to swim):</label>
     <input id="eventType" required />
 
     <button type="submit">Generate Story ✨</button>
@@ -99,13 +95,14 @@
 
   <script>
     async function generateStory() {
-      const childName = document.getElementById("childName").value;
-      const age = document.getElementById("age").value;
-      const setting = document.getElementById("setting").value;
-      const favoriteAnimal = document.getElementById("favoriteAnimal").value;
-      const magicElement = document.getElementById("magicElement").value;
-      const eventType = document.getElementById("eventType").value;
+      const childName = document.getElementById("childName").value.trim();
+      const age = document.getElementById("age").value.trim();
+      const setting = document.getElementById("setting").value.trim();
+      const favoriteAnimal = document.getElementById("favoriteAnimal").value.trim();
+      const magicElement = document.getElementById("magicElement").value.trim();
+      const eventType = document.getElementById("eventType").value.trim();
 
+      // Show loading
       document.getElementById("storyOutput").innerText = "Generating your magical story... 🧚‍♀️";
 
       try {
@@ -122,24 +119,9 @@
           }),
         });
 
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          document.getElementById("storyOutput").innerText = "Oops! Something went wrong: " + (errorData.error || response.statusText);
-          return;
-        }
-
         const data = await response.json();
 
-        if (data.story) {
+        if (response.status === 200 && data.story) {
           document.getElementById("storyOutput").innerText = data.story;
         } else {
-          document.getElementById("storyOutput").innerText = "Oops! Something went wrong: " + (data.error || "Unknown error");
-        }
-      } catch (error) {
-        document.getElementById("storyOutput").innerText = "Something went wrong. Please try again.";
-      }
-    }
-  </script>
-
-</body>
-</html>
+          document.getElem
